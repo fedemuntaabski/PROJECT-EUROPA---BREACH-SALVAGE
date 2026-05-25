@@ -65,4 +65,7 @@ layout_mode = 2
 text = "Back
 "
 
+[connection signal="value_changed" from="MainPanel/Content/MasterVolume" to="." method="_on_master_volume_value_changed"]
+[connection signal="value_changed" from="MainPanel/Content/SFXVolume" to="." method="_on_sfx_volume_value_changed"]
+[connection signal="toggled" from="MainPanel/Content/FullscreenToggle" to="." method="_on_fullscreen_toggle_toggled"]
 [connection signal="pressed" from="MainPanel/Content/BackButton" to="." method="_on_back_button_pressed"]
