@@ -3,22 +3,17 @@ extends Node2D
 
 @onready var _world: Node = get_parent()
 
+@export var move_speed: float = 180.0
+
 
 func _ready() -> void:
 	set_process(true)
 
 
 func _process(_delta: float) -> void:
-	if Input.is_action_just_pressed("ui_left"):
-		_request_move(&"left")
-	elif Input.is_action_just_pressed("ui_right"):
-		_request_move(&"right")
-	elif Input.is_action_just_pressed("ui_up"):
-		_request_move(&"up")
-	elif Input.is_action_just_pressed("ui_down"):
-		_request_move(&"down")
+	var movement_direction: Vector2 = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+	if movement_direction != Vector2.ZERO:
+		global_position += movement_direction.normalized() * move_speed * _delta
 
-
-func _request_move(direction: StringName) -> void:
-	if _world != null and _world.has_method("try_move"):
-		_world.try_move(direction)
+	if _world != null and _world.has_method("resolve_player_room"):
+		_world.resolve_player_room()
