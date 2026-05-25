@@ -32,7 +32,10 @@ var _current_room_id: StringName = START_ROOM_ID
 
 const ACTIVE_ROOM_MODULATE := Color(1, 1, 1, 1)
 const INACTIVE_ROOM_MODULATE := Color(0.75, 0.75, 0.75, 0.45)
+const EXIT_ZONE_SIZE := Vector2(20, 44)
+const EXIT_SPAWN_INSET := 32.0
 const CAMERA_FOLLOW_SPEED := 8.0
+const ROOM_EXIT_ZONE_SCRIPT := preload("res://scripts/levels/room_exit_zone.gd")
 
 
 func _ready() -> void:
@@ -44,6 +47,7 @@ func _ready() -> void:
 	if not _rooms.has(_current_room_id):
 		_current_room_id = _rooms.keys()[0]
 
+	_build_exit_zones()
 	_set_current_room(_current_room_id)
 	if is_instance_valid(_player) and _rooms.has(_current_room_id):
 		_player.global_position = _rooms[_current_room_id].global_position
@@ -52,59 +56,25 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	_resolve_player_state()
 	_update_camera(delta)
 	_update_debug_readout()
 
 
-func try_move(direction: StringName) -> bool:
-	return _attempt_directional_transition(direction)
-
-
-func resolve_player_room() -> void:
+func _resolve_player_state() -> void:
 	if not is_instance_valid(_player) or not _rooms.has(_current_room_id):
 		return
 
 	var current_room: Node2D = _rooms[_current_room_id]
-	var local_position: Vector2 = _player.global_position - current_room.global_position
 	var room_bounds: Rect2 = _get_room_bounds(current_room)
-	var half_extents: Vector2 = room_bounds.size * 0.5
-	var connections: Dictionary = ROOM_CONNECTIONS.get(_current_room_id, {})
+	var local_position: Vector2 = _player.global_position - current_room.global_position
+	local_position = _clamp_local_position_to_room(local_position, room_bounds)
+	_player.global_position = current_room.global_position + local_position
 
-	var transition_direction: StringName = &""
-	var transition_overshoot: float = 0.0
-
-	if local_position.x > half_extents.x:
-		if connections.has(&"right"):
-			transition_direction = &"right"
-			transition_overshoot = local_position.x - half_extents.x
-		else:
-			local_position.x = half_extents.x
-	elif local_position.x < -half_extents.x:
-		if connections.has(&"left"):
-			transition_direction = &"left"
-			transition_overshoot = -half_extents.x - local_position.x
-		else:
-			local_position.x = -half_extents.x
-
-	if local_position.y > half_extents.y:
-		if connections.has(&"down") and local_position.y - half_extents.y > transition_overshoot:
-			transition_direction = &"down"
-			transition_overshoot = local_position.y - half_extents.y
-		else:
-			local_position.y = half_extents.y
-	elif local_position.y < -half_extents.y:
-		if connections.has(&"up") and -half_extents.y - local_position.y > transition_overshoot:
-			transition_direction = &"up"
-			transition_overshoot = -half_extents.y - local_position.y
-		else:
-			local_position.y = -half_extents.y
-
-	if transition_direction != &"":
-		_transition_player_to_room(transition_direction, transition_overshoot, local_position)
-	else:
-		_player.global_position = current_room.global_position + local_position
-
-	_update_debug_readout()
+	var active_exit_zone = _find_active_exit_zone(current_room, local_position)
+	_update_room_visual_state(local_position)
+	if is_instance_valid(active_exit_zone):
+		_transition_player_to_room(active_exit_zone, local_position)
 
 
 func _cache_rooms() -> void:
@@ -116,67 +86,128 @@ func _cache_rooms() -> void:
 			_rooms[room_id] = child
 
 
+func _build_exit_zones() -> void:
+	for room_id in _rooms.keys():
+		var current_room_id: StringName = room_id
+		var room: Node2D = _rooms[current_room_id]
+		var connections: Dictionary = ROOM_CONNECTIONS.get(current_room_id, {})
+		for direction in connections.keys():
+			var target_room_id: StringName = connections[direction]
+			if not _rooms.has(target_room_id):
+				continue
+
+			var exit_zone = ROOM_EXIT_ZONE_SCRIPT.new()
+			exit_zone.source_room_id = current_room_id
+			exit_zone.target_room_id = target_room_id
+			exit_zone.exit_direction = direction
+			exit_zone.zone_size = EXIT_ZONE_SIZE
+			exit_zone.name = "%s_%s_exit" % [current_room_id, direction]
+			room.add_child(exit_zone)
+			_position_exit_zone(exit_zone, room, direction)
+
+
 func _set_current_room(room_id: StringName) -> void:
 	_current_room_id = room_id
-	_apply_room_visual_state()
+	_update_room_visual_state()
 	room_changed.emit(room_id)
 
 
-func _attempt_directional_transition(direction: StringName) -> bool:
-	var connections: Dictionary = ROOM_CONNECTIONS.get(_current_room_id, {})
-	if not connections.has(direction):
-		return false
 
-	var next_room_id: StringName = connections[direction]
-	if not _rooms.has(next_room_id):
-		return false
-
-	_set_current_room(next_room_id)
-	return true
-
-
-func _transition_player_to_room(direction: StringName, overshoot: float, local_position: Vector2) -> void:
-	var connections: Dictionary = ROOM_CONNECTIONS.get(_current_room_id, {})
-	if not connections.has(direction) or not _rooms.has(connections[direction]):
+func _transition_player_to_room(exit_zone, local_position: Vector2) -> void:
+	if not is_instance_valid(exit_zone) or not _rooms.has(exit_zone.target_room_id):
 		return
 
-	var next_room_id: StringName = connections[direction]
+	var next_room_id: StringName = exit_zone.target_room_id
 	var next_room: Node2D = _rooms[next_room_id]
 	var next_bounds: Rect2 = _get_room_bounds(next_room)
 	var next_local_position: Vector2 = local_position
 
-	match direction:
+	match exit_zone.exit_direction:
 		&"right":
-			next_local_position.x = next_bounds.position.x + overshoot
-			next_local_position.y = clamp(local_position.y, next_bounds.position.y, next_bounds.position.y + next_bounds.size.y)
+			next_local_position.x = next_bounds.position.x + EXIT_SPAWN_INSET
+			next_local_position.y = clamp(local_position.y, next_bounds.position.y + EXIT_SPAWN_INSET, next_bounds.position.y + next_bounds.size.y - EXIT_SPAWN_INSET)
 		&"left":
-			next_local_position.x = next_bounds.position.x + next_bounds.size.x - overshoot
-			next_local_position.y = clamp(local_position.y, next_bounds.position.y, next_bounds.position.y + next_bounds.size.y)
+			next_local_position.x = next_bounds.position.x + next_bounds.size.x - EXIT_SPAWN_INSET
+			next_local_position.y = clamp(local_position.y, next_bounds.position.y + EXIT_SPAWN_INSET, next_bounds.position.y + next_bounds.size.y - EXIT_SPAWN_INSET)
 		&"down":
-			next_local_position.y = next_bounds.position.y + overshoot
-			next_local_position.x = clamp(local_position.x, next_bounds.position.x, next_bounds.position.x + next_bounds.size.x)
+			next_local_position.y = next_bounds.position.y + EXIT_SPAWN_INSET
+			next_local_position.x = clamp(local_position.x, next_bounds.position.x + EXIT_SPAWN_INSET, next_bounds.position.x + next_bounds.size.x - EXIT_SPAWN_INSET)
 		&"up":
-			next_local_position.y = next_bounds.position.y + next_bounds.size.y - overshoot
-			next_local_position.x = clamp(local_position.x, next_bounds.position.x, next_bounds.position.x + next_bounds.size.x)
+			next_local_position.y = next_bounds.position.y + next_bounds.size.y - EXIT_SPAWN_INSET
+			next_local_position.x = clamp(local_position.x, next_bounds.position.x + EXIT_SPAWN_INSET, next_bounds.position.x + next_bounds.size.x - EXIT_SPAWN_INSET)
 
 	_current_room_id = next_room_id
 	_player.global_position = next_room.global_position + next_local_position
-	_apply_room_visual_state()
+	_update_room_visual_state(next_local_position)
 	print("Current room: ", next_room_id, " | player local position: ", next_local_position)
 	room_changed.emit(next_room_id)
 
 
-func _apply_room_visual_state() -> void:
+func _update_room_visual_state(player_local_position: Vector2 = Vector2.ZERO) -> void:
 	for candidate_room_id: StringName in _rooms.keys():
 		var candidate_room: Node2D = _rooms[candidate_room_id]
 		if is_instance_valid(candidate_room):
 			candidate_room.modulate = ACTIVE_ROOM_MODULATE if candidate_room_id == _current_room_id else INACTIVE_ROOM_MODULATE
+			_update_exit_zone_visual_state(candidate_room_id, player_local_position if candidate_room_id == _current_room_id else Vector2.ZERO)
+
+
+func _update_exit_zone_visual_state(room_id: StringName, player_local_position: Vector2) -> void:
+	var room: Node2D = _rooms.get(room_id, null)
+	if not is_instance_valid(room):
+		return
+
+	var exit_zones: Array = _get_room_exit_zones(room)
+	for exit_zone_variant in exit_zones:
+		var exit_zone = exit_zone_variant
+		if not is_instance_valid(exit_zone):
+			continue
+
+		var is_current_room: bool = room_id == _current_room_id
+		var player_inside: bool = is_current_room and exit_zone.contains_local_point(player_local_position - exit_zone.position)
+		exit_zone.set_visual_state(is_current_room, player_inside)
+
+
+func _get_room_exit_zones(room: Node2D) -> Array:
+	if room.has_method("get_exit_zones"):
+		return room.get_exit_zones()
+	return []
+
+
+func _find_active_exit_zone(current_room: Node2D, local_position: Vector2):
+	var exit_zones: Array = _get_room_exit_zones(current_room)
+	for exit_zone_variant in exit_zones:
+		var exit_zone = exit_zone_variant
+		if is_instance_valid(exit_zone) and exit_zone.contains_local_point(local_position - exit_zone.position):
+			return exit_zone
+	return null
+
+
+func _position_exit_zone(exit_zone, room: Node2D, direction: StringName) -> void:
+	var room_bounds: Rect2 = _get_room_bounds(room)
+	var half_zone_size: Vector2 = exit_zone.zone_size * 0.5
+
+	match direction:
+		&"right":
+			exit_zone.position = Vector2(room_bounds.position.x + room_bounds.size.x - half_zone_size.x, 0.0)
+		&"left":
+			exit_zone.position = Vector2(room_bounds.position.x + half_zone_size.x, 0.0)
+		&"down":
+			exit_zone.position = Vector2(0.0, room_bounds.position.y + room_bounds.size.y - half_zone_size.y)
+		&"up":
+			exit_zone.position = Vector2(0.0, room_bounds.position.y + half_zone_size.y)
 
 
 func _get_room_bounds(room: Node2D) -> Rect2:
 	if room.has_method("get_room_bounds"):
 		return room.get_room_bounds()
 	return Rect2(Vector2(-80, -55), Vector2(160, 110))
+
+
+func _clamp_local_position_to_room(local_position: Vector2, room_bounds: Rect2) -> Vector2:
+	var clamped_position: Vector2 = local_position
+	clamped_position.x = clamp(clamped_position.x, room_bounds.position.x, room_bounds.position.x + room_bounds.size.x)
+	clamped_position.y = clamp(clamped_position.y, room_bounds.position.y, room_bounds.position.y + room_bounds.size.y)
+	return clamped_position
 
 
 func _update_camera(delta: float) -> void:
@@ -193,4 +224,20 @@ func _update_debug_readout() -> void:
 
 	var current_room: Node2D = _rooms[_current_room_id]
 	var local_position: Vector2 = _player.global_position - current_room.global_position
-	_debug_label.text = "Room: %s\nLocal: (%.1f, %.1f)" % [_current_room_id, local_position.x, local_position.y]
+	var exit_labels: PackedStringArray = PackedStringArray()
+	var exit_zones: Array = _get_room_exit_zones(current_room)
+	for exit_zone_variant in exit_zones:
+		var exit_zone = exit_zone_variant
+		if not is_instance_valid(exit_zone):
+			continue
+
+		var active_marker: String = "*" if exit_zone.contains_local_point(local_position - exit_zone.position) else "-"
+		exit_labels.append("%s%s->%s" % [active_marker, exit_zone.exit_direction, exit_zone.target_room_id])
+
+	var exit_text: String = "none"
+	if not exit_labels.is_empty():
+		exit_text = exit_labels[0]
+		for index in range(1, exit_labels.size()):
+			exit_text += ", " + exit_labels[index]
+
+	_debug_label.text = "Room: %s\nLocal: (%.1f, %.1f)\nExits: %s" % [_current_room_id, local_position.x, local_position.y, exit_text]
