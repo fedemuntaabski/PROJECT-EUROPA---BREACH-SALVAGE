@@ -5,6 +5,7 @@
 [ext_resource type="AudioStream" uid="uid://bl5nqqrjyw05h" path="res://assets/audio/ambient/drone.mp3" id="3_xpiny"]
 [ext_resource type="AudioStream" uid="uid://clctdvsfok5kn" path="res://assets/audio/ambient/ambiente.mp3" id="4_bhu4a"]
 [ext_resource type="AudioStream" uid="uid://6w8msf8k4ccd" path="res://assets/audio/ambient/underwater.mp3" id="5_e2per"]
+[ext_resource type="PackedScene" uid="uid://wjkb48fiobht" path="res://scenes/ui/MainMenuBackground.tscn" id="6_bhu4a"]
 
 [sub_resource type="Animation" id="Animation_bhu4a"]
 length = 0.001
@@ -126,6 +127,7 @@ theme = ExtResource("1_6jbdy")
 script = ExtResource("1_vjtqc")
 
 [node name="Background" type="ColorRect" parent="." unique_id=705924382]
+visible = false
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
@@ -133,6 +135,19 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.019607844, 0.02745098, 0.039215688, 1)
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="." unique_id=2034520581]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer" unique_id=867589383]
+size = Vector2i(1920, 1920)
+
+[node name="MainMenuBackground" parent="SubViewportContainer/SubViewport" unique_id=1132095367 instance=ExtResource("6_bhu4a")]
 
 [node name="MenuContainer" type="CenterContainer" parent="." unique_id=2039308813]
 layout_mode = 1
