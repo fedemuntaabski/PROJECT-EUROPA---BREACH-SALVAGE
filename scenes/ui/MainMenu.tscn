@@ -1,0 +1,56 @@
+[gd_scene format=3 uid="uid://bv6vjpvlwfo2l"]
+
+[ext_resource type="Script" uid="uid://cje4w6xe333wj" path="res://scenes/ui/main_menu.gd" id="1_vjtqc"]
+
+[node name="MainMenu" type="Control" unique_id=2098168]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_vjtqc")
+
+[node name="Background" type="ColorRect" parent="." unique_id=705924382]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.019607844, 0.02745098, 0.039215688, 1)
+
+[node name="MenuContainer" type="CenterContainer" parent="." unique_id=2039308813]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MenuContainer" unique_id=710380401]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Title Label" type="Label" parent="MenuContainer/VBoxContainer" unique_id=1213223394]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "PROJECT EUROPA"
+horizontal_alignment = 1
+
+[node name="Start Button" type="Button" parent="MenuContainer/VBoxContainer" unique_id=894712260]
+layout_mode = 2
+text = "START OPERATION
+"
+
+[node name="SettingsButton" type="Button" parent="MenuContainer/VBoxContainer" unique_id=1688836117]
+layout_mode = 2
+text = "SETTINGS"
+
+[node name="ExitButton" type="Button" parent="MenuContainer/VBoxContainer" unique_id=1342553084]
+layout_mode = 2
+text = "EXIT
+"
+
+[connection signal="pressed" from="MenuContainer/VBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]
