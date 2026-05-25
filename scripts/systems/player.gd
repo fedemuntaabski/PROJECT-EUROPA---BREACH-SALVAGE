@@ -23,13 +23,13 @@ func _input(event):
 func _physics_process(delta):
 	var direction = Vector3.ZERO
 
-	if Input.is_action_pressed("ui"):
+	if Input.is_action_pressed("up"):
 		direction -= transform.basis.z
-	if Input.is_action_pressed("ui"):
+	if Input.is_action_pressed("down"):
 		direction += transform.basis.z
-	if Input.is_action_pressed("ui"):
+	if Input.is_action_pressed("left"):
 		direction -= transform.basis.x
-	if Input.is_action_pressed("ui"):
+	if Input.is_action_pressed("right"):
 		direction += transform.basis.x
 
 	direction = direction.normalized()
