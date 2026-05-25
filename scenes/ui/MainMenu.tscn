@@ -2,9 +2,6 @@
 
 [ext_resource type="Theme" uid="uid://dgca74mxvlu7k" path="res://assets/ui/themes/MainTheme.tres" id="1_6jbdy"]
 [ext_resource type="Script" uid="uid://cje4w6xe333wj" path="res://scripts/ui/main_menu.gd" id="1_vjtqc"]
-[ext_resource type="AudioStream" uid="uid://bl5nqqrjyw05h" path="res://assets/audio/ambient/drone.mp3" id="3_xpiny"]
-[ext_resource type="AudioStream" uid="uid://clctdvsfok5kn" path="res://assets/audio/ambient/ambiente.mp3" id="4_bhu4a"]
-[ext_resource type="AudioStream" uid="uid://6w8msf8k4ccd" path="res://assets/audio/ambient/underwater.mp3" id="5_e2per"]
 [ext_resource type="PackedScene" uid="uid://wjkb48fiobht" path="res://scenes/ui/MainMenuBackground.tscn" id="6_bhu4a"]
 
 [sub_resource type="Animation" id="Animation_bhu4a"]
@@ -188,20 +185,6 @@ modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 text = "EXIT
 "
-
-[node name="DroneAudio" type="AudioStreamPlayer" parent="." unique_id=218139821]
-stream = ExtResource("3_xpiny")
-volume_db = -10.0
-autoplay = true
-
-[node name="Ambient" type="AudioStreamPlayer" parent="." unique_id=1486891463]
-stream = ExtResource("4_bhu4a")
-volume_db = -15.0
-
-[node name="Underwater" type="AudioStreamPlayer" parent="." unique_id=1022750424]
-stream = ExtResource("5_e2per")
-volume_db = -17.0
-autoplay = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=532621602]
 libraries/ = SubResource("AnimationLibrary_bhu4a")

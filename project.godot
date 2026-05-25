@@ -21,6 +21,9 @@ buses/default_bus_layout="uid://c05kqrvslceeu"
 
 [autoload]
 
+SettingsManager="*res://scripts/managers/SettingsManager.gd"
+AudioManager="*res://scripts/managers/AudioManager.gd"
+SceneManager="*res://scripts/managers/SceneManager.gd"
 GameManager="*uid://c5joum4hltqep"
 
 [display]

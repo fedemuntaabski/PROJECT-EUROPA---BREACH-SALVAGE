@@ -6,29 +6,26 @@ extends Control
 
 
 func _ready():
-	master_slider.value = GameManager.settings["master_volume"]
-	sfx_slider.value = GameManager.settings["sfx_volume"]
-	fullscreen.button_pressed = GameManager.settings["fullscreen"]
+	master_slider.value = SettingsManager.settings["master_volume"]
+	sfx_slider.value = SettingsManager.settings["sfx_volume"]
+	fullscreen.button_pressed = SettingsManager.settings["fullscreen"]
 
 
 func _on_back_button_pressed():
-	GameManager.save_settings()
-	GameManager.change_scene("res://scenes/ui/MainMenu.tscn")
+	SettingsManager.save_settings()
+	SceneManager.change_scene("res://scenes/ui/MainMenu.tscn")
 
 
 # 🔊 MASTER
 func _on_master_volume_value_changed(value):
-	GameManager.settings["master_volume"] = value
-	GameManager.apply_settings()
+	SettingsManager.set_setting("master_volume", value)
 
 
 # 🔊 SFX
 func _on_sfx_volume_value_changed(value):
-	GameManager.settings["sfx_volume"] = value
-	GameManager.apply_settings()
+	SettingsManager.set_setting("sfx_volume", value)
 
 
 # 🖥 FULLSCREEN
 func _on_fullscreen_toggle_toggled(value):
-	GameManager.settings["fullscreen"] = value
-	GameManager.apply_settings()
+	SettingsManager.set_setting("fullscreen", value)
