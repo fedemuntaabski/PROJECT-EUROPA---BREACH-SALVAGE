@@ -1,11 +1,10 @@
 [gd_scene format=3 uid="uid://bv6vjpvlwfo2l"]
 
-[ext_resource type="Theme" uid="uid://dgca74mxvlu7k" path="res://assets/ui/themes/MainTheme.tres" id="1_6jbdy"]
 [ext_resource type="Script" uid="uid://cje4w6xe333wj" path="res://scripts/ui/main_menu.gd" id="1_vjtqc"]
 [ext_resource type="PackedScene" uid="uid://wjkb48fiobht" path="res://scenes/ui/MainMenuBackground.tscn" id="6_bhu4a"]
 
 [sub_resource type="Animation" id="Animation_bhu4a"]
-length = 0.001
+length = 1.4666667
 tracks/0/type = "value"
 tracks/0/imported = false
 tracks/0/enabled = true
@@ -120,7 +119,6 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("1_6jbdy")
 script = ExtResource("1_vjtqc")
 
 [node name="Background" type="ColorRect" parent="." unique_id=705924382]

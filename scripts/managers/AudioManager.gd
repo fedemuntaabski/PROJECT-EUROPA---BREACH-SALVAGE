@@ -16,8 +16,16 @@ func _ready() -> void:
 	add_child(menu_ambience_player)
 	menu_ambience_player.bus = AUDIO_BUS_AMBIENT
 	menu_ambience_player.stream = preload("res://assets/audio/ambient/drone.mp3")
-	SettingsManager.settings_changed.connect(_on_settings_changed)
-	_on_settings_changed(SettingsManager.settings)
+	call_deferred("_connect_settings_manager")
+
+
+func _connect_settings_manager() -> void:
+	var settings_manager := get_node_or_null("/root/SettingsManager")
+	if settings_manager == null:
+		return
+
+	settings_manager.settings_changed.connect(_on_settings_changed)
+	_on_settings_changed(settings_manager.settings)
 
 
 func _on_settings_changed(settings: Dictionary) -> void:

@@ -1,11 +1,11 @@
 [gd_scene format=3 uid="uid://wjkb48fiobht"]
 
-[ext_resource type="Script" path="res://scripts/mainmenucamara.gd" id="1_rllsr"]
+[ext_resource type="Script" path="res://scripts/core/mainmenucamara.gd" id="1_rllsr"]
 [ext_resource type="Material" uid="uid://cofi2xd1susru" path="res://materials/industrial_wall.tres" id="1_uhcxx"]
 [ext_resource type="Script" uid="uid://cqkf2qjckptx1" path="res://scripts/core/alarm_light.gd" id="2_el81p"]
 [ext_resource type="CylinderMesh" uid="uid://cxi3drv2yvatt" path="res://materials/pipe_variation1.tres" id="4_6tcdd"]
 [ext_resource type="Material" uid="uid://cljd01gikavcd" path="res://materials/pipe_variation2.tres" id="5_d0q2f"]
-[ext_resource type="Script" path="res://scripts/terminal_screen.gd" id="6_dqfho"]
+[ext_resource type="Script" path="res://scripts/core/terminal_screen.gd" id="6_dqfho"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_n5ba0"]
 material = ExtResource("1_uhcxx")
