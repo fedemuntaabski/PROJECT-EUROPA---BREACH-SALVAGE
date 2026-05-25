@@ -1,10 +1,12 @@
 extends Control
 
 @onready var ambient_audio = $Ambient
+@onready var animation_player = $AnimationPlayer
 
 func _ready():
 	randomize()
 	play_random_creaks()
+	animation_player.play("intro")
 
 func play_random_creaks():
 	while true:

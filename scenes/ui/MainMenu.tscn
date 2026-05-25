@@ -6,6 +6,115 @@
 [ext_resource type="AudioStream" uid="uid://clctdvsfok5kn" path="res://assets/audio/ambient/ambiente.mp3" id="4_bhu4a"]
 [ext_resource type="AudioStream" uid="uid://6w8msf8k4ccd" path="res://assets/audio/ambient/underwater.mp3" id="5_e2per"]
 
+[sub_resource type="Animation" id="Animation_bhu4a"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MenuContainer/VBoxContainer/Title Label:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MenuContainer/VBoxContainer/Start Button:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("MenuContainer/VBoxContainer/SettingsButton:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("MenuContainer/VBoxContainer/ExitButton:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 0)]
+}
+
+[sub_resource type="Animation" id="Animation_xpiny"]
+resource_name = "intro"
+length = 2.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("MenuContainer/VBoxContainer/Title Label:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 1),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("MenuContainer/VBoxContainer/Start Button:modulate")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0.8, 1.4),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("MenuContainer/VBoxContainer/SettingsButton:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(1.1, 1.7),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+tracks/3/type = "value"
+tracks/3/imported = false
+tracks/3/enabled = true
+tracks/3/path = NodePath("MenuContainer/VBoxContainer/ExitButton:modulate")
+tracks/3/interp = 1
+tracks/3/loop_wrap = true
+tracks/3/keys = {
+"times": PackedFloat32Array(1.4, 2),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_bhu4a"]
+_data = {
+&"RESET": SubResource("Animation_bhu4a"),
+&"intro": SubResource("Animation_xpiny")
+}
+
 [node name="MainMenu" type="Control" unique_id=2098168]
 layout_mode = 3
 anchors_preset = 15
@@ -39,21 +148,25 @@ theme_override_constants/separation = 20
 alignment = 1
 
 [node name="Title Label" type="Label" parent="MenuContainer/VBoxContainer" unique_id=1213223394]
+modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 theme_override_font_sizes/font_size = 48
 text = "PROJECT EUROPA"
 horizontal_alignment = 1
 
 [node name="Start Button" type="Button" parent="MenuContainer/VBoxContainer" unique_id=894712260]
+modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 text = "START OPERATION
 "
 
 [node name="SettingsButton" type="Button" parent="MenuContainer/VBoxContainer" unique_id=1688836117]
+modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 text = "SETTINGS"
 
 [node name="ExitButton" type="Button" parent="MenuContainer/VBoxContainer" unique_id=1342553084]
+modulate = Color(1, 1, 1, 0)
 layout_mode = 2
 text = "EXIT
 "
@@ -71,5 +184,8 @@ volume_db = -15.0
 stream = ExtResource("5_e2per")
 volume_db = -17.0
 autoplay = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=532621602]
+libraries/ = SubResource("AnimationLibrary_bhu4a")
 
 [connection signal="pressed" from="MenuContainer/VBoxContainer/ExitButton" to="." method="_on_exit_button_pressed"]
