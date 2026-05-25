@@ -17,18 +17,18 @@ func _on_back_button_pressed():
 
 
 # 🔊 MASTER
-func _on_master_volume_changed(value):
+func _on_master_volume_value_changed(value):
 	GameManager.settings["master_volume"] = value
 	GameManager.apply_settings()
 
 
 # 🔊 SFX
-func _on_sfx_volume_changed(value):
+func _on_sfx_volume_value_changed(value):
 	GameManager.settings["sfx_volume"] = value
 	GameManager.apply_settings()
 
 
 # 🖥 FULLSCREEN
-func _on_fullscreen_toggled(value):
+func _on_fullscreen_toggle_toggled(value):
 	GameManager.settings["fullscreen"] = value
 	GameManager.apply_settings()

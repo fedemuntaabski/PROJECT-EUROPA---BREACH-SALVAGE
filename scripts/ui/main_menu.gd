@@ -18,10 +18,11 @@ func play_random_creaks():
 		ambient_audio.pitch_scale = randf_range(0.9, 1.1)
 		ambient_audio.play()
 
-
+func _on_start_button_pressed() -> void:
+	GameManager.change_scene("res://scenes/levels/prototype_station.tscn")
+	
 func _on_settings_button_pressed():
 	GameManager.change_scene("res://scenes/ui/SettingsMenu.tscn")
-
 
 func _on_exit_button_pressed():
 	get_tree().quit()
