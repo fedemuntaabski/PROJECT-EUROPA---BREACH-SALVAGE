@@ -1,0 +1,68 @@
+[gd_scene format=3 uid="uid://cylssycwt3gyn"]
+
+[ext_resource type="Script" path="res://scripts/settings_menu.gd" id="1_gtm51"]
+
+[node name="SettingsMenu" type="Control" unique_id=407920193]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_gtm51")
+
+[node name="MainPanel" type="Panel" parent="." unique_id=1824327331]
+custom_minimum_size = Vector2(450, 320)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -150.0
+offset_right = 200.0
+offset_bottom = 150.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Content" type="VBoxContainer" parent="MainPanel" unique_id=1950784565]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="MainPanel/Content" unique_id=1823318081]
+layout_mode = 2
+text = "Master Volume"
+
+[node name="MasterVolume" type="HSlider" parent="MainPanel/Content" unique_id=1916763194]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 0.8
+
+[node name="Label2" type="Label" parent="MainPanel/Content" unique_id=1602223762]
+layout_mode = 2
+text = "SFX Volume"
+
+[node name="SFXVolume" type="HSlider" parent="MainPanel/Content" unique_id=247688331]
+layout_mode = 2
+max_value = 1.0
+step = 0.01
+value = 0.8
+
+[node name="FullscreenToggle" type="CheckBox" parent="MainPanel/Content" unique_id=939735964]
+layout_mode = 2
+text = "Fullscreen
+"
+
+[node name="BackButton" type="Button" parent="MainPanel/Content" unique_id=1880038123]
+layout_mode = 2
+text = "Back
+"
+
+[connection signal="pressed" from="MainPanel/Content/BackButton" to="." method="_on_back_button_pressed"]

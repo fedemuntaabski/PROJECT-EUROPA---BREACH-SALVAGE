@@ -3,6 +3,9 @@
 [ext_resource type="Script" path="res://scripts/mainmenucamara.gd" id="1_rllsr"]
 [ext_resource type="Material" uid="uid://cofi2xd1susru" path="res://materials/industrial_wall.tres" id="1_uhcxx"]
 [ext_resource type="Script" uid="uid://cqkf2qjckptx1" path="res://scripts/core/alarm_light.gd" id="2_el81p"]
+[ext_resource type="CylinderMesh" uid="uid://cxi3drv2yvatt" path="res://materials/pipe_variation1.tres" id="4_6tcdd"]
+[ext_resource type="Material" uid="uid://cljd01gikavcd" path="res://materials/pipe_variation2.tres" id="5_d0q2f"]
+[ext_resource type="Script" uid="uid://dlm2mdrkdfeng" path="res://scripts/terminal_screen.gd" id="6_dqfho"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_n5ba0"]
 material = ExtResource("1_uhcxx")
@@ -12,6 +15,38 @@ fog_enabled = true
 fog_light_color = Color(0.101960786, 0.14901961, 0.1882353, 1)
 fog_density = 0.008
 fog_sky_affect = 0.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_rllsr"]
+transparency = 1
+albedo_color = Color(0.682, 0.733, 0.769, 0.08)
+billboard_mode = 1
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_rllsr"]
+emission_shape = 3
+emission_box_extents = Vector3(2, 2, 5)
+initial_velocity_min = 0.02
+initial_velocity_max = 0.049999997
+gravity = Vector3(0, 0, 0)
+scale_over_velocity_min = 0.02
+scale_over_velocity_max = 0.099999994
+
+[sub_resource type="QuadMesh" id="QuadMesh_rllsr"]
+size = Vector2(0.03, 0.03)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_rllsr"]
+material = ExtResource("5_d0q2f")
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_d0q2f"]
+material = ExtResource("5_d0q2f")
+height = 1.0
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_d0q2f"]
+albedo_color = Color(0.12156863, 0.6862745, 0.47058824, 1)
+emission_enabled = true
+emission = Color(0.12156863, 0.6862745, 0.47058824, 1)
+emission_energy_multiplier = 2.0
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_d0q2f"]
 
 [node name="MainMenuBackground" type="Node3D" unique_id=1132095367]
 
@@ -50,3 +85,39 @@ light_energy = 1.5
 shadow_enabled = true
 omni_range = 6.0
 script = ExtResource("2_el81p")
+
+[node name="ColdLight" type="OmniLight3D" parent="." unique_id=190703734]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 3)
+light_color = Color(0.41568628, 0.56078434, 0.65882355, 1)
+light_energy = 0.8
+shadow_enabled = true
+omni_range = 7.0
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=1459858294]
+visible = false
+material_override = SubResource("StandardMaterial3D_rllsr")
+emitting = false
+amount = 300
+lifetime = 8.0
+one_shot = true
+process_material = SubResource("ParticleProcessMaterial_rllsr")
+draw_pass_1 = SubResource("QuadMesh_rllsr")
+
+[node name="Tuberia Techo" type="MeshInstance3D" parent="." unique_id=655683792]
+transform = Transform3D(-6.5567085e-09, -2, 0, 0.15, -8.742278e-08, 0, 0, 0, 0.15, 0, 2.8, -0.5)
+mesh = ExtResource("4_6tcdd")
+
+[node name="Tuberia Costado izquierdo" type="MeshInstance3D" parent="." unique_id=1667917572]
+transform = Transform3D(0.08, 0, 0, 0, 1.5, 0, 0, 0, 0.08, -1.9, 1.5, -3)
+mesh = SubResource("CylinderMesh_rllsr")
+
+[node name="Tuberia Costado izquierdo2" type="MeshInstance3D" parent="." unique_id=736102121]
+transform = Transform3D(1.5285484e-16, 6.556708e-08, 0.08, 0.08, -6.556708e-08, 0, 3.496911e-09, 1.5, -3.496911e-09, -1.9, 2.5, -3.8)
+mesh = SubResource("CylinderMesh_d0q2f")
+
+[node name="TerminalScreen" type="MeshInstance3D" parent="." unique_id=1915178122]
+transform = Transform3D(-3.4969112e-08, 0.5, 0, -0.8, -2.1855694e-08, 0, 0, 0, 1, -1.9, 1.5, -2)
+visible = false
+material_override = SubResource("StandardMaterial3D_d0q2f")
+mesh = SubResource("PlaneMesh_d0q2f")
+script = ExtResource("6_dqfho")
