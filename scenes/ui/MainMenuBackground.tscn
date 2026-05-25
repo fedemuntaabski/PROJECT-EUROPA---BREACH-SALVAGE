@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://cqkf2qjckptx1" path="res://scripts/core/alarm_light.gd" id="2_el81p"]
 [ext_resource type="CylinderMesh" uid="uid://cxi3drv2yvatt" path="res://materials/pipe_variation1.tres" id="4_6tcdd"]
 [ext_resource type="Material" uid="uid://cljd01gikavcd" path="res://materials/pipe_variation2.tres" id="5_d0q2f"]
-[ext_resource type="Script" uid="uid://dlm2mdrkdfeng" path="res://scripts/terminal_screen.gd" id="6_dqfho"]
+[ext_resource type="Script" path="res://scripts/terminal_screen.gd" id="6_dqfho"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_n5ba0"]
 material = ExtResource("1_uhcxx")
@@ -79,7 +79,7 @@ mesh = SubResource("BoxMesh_n5ba0")
 environment = SubResource("Environment_uhcxx")
 
 [node name="AlarmLight" type="OmniLight3D" parent="." unique_id=1900498603]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -2)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.5, -2.2692184)
 light_color = Color(0.54509807, 0.11764706, 0.16470589, 1)
 light_energy = 1.5
 shadow_enabled = true
@@ -104,7 +104,7 @@ process_material = SubResource("ParticleProcessMaterial_rllsr")
 draw_pass_1 = SubResource("QuadMesh_rllsr")
 
 [node name="Tuberia Techo" type="MeshInstance3D" parent="." unique_id=655683792]
-transform = Transform3D(-6.5567085e-09, -2, 0, 0.15, -8.742278e-08, 0, 0, 0, 0.15, 0, 2.8, -0.5)
+transform = Transform3D(-6.5567085e-09, -2, 0, 0.15, -8.742278e-08, 0, 0, 0, 0.15, 0, 2.8, -0.43278646)
 mesh = ExtResource("4_6tcdd")
 
 [node name="Tuberia Costado izquierdo" type="MeshInstance3D" parent="." unique_id=1667917572]
@@ -113,6 +113,22 @@ mesh = SubResource("CylinderMesh_rllsr")
 
 [node name="Tuberia Costado izquierdo2" type="MeshInstance3D" parent="." unique_id=736102121]
 transform = Transform3D(1.5285484e-16, 6.556708e-08, 0.08, 0.08, -6.556708e-08, 0, 3.496911e-09, 1.5, -3.496911e-09, -1.9, 2.5, -3.8)
+mesh = SubResource("CylinderMesh_d0q2f")
+
+[node name="Tuberia Costado izquierdo3" type="MeshInstance3D" parent="." unique_id=1380204770]
+transform = Transform3D(1.5285484e-16, 6.556708e-08, 0.08, 0.08, -6.556708e-08, 0, 3.496911e-09, 1.5, -3.496911e-09, -1.9, 1.4313357, -3.8)
+mesh = SubResource("CylinderMesh_d0q2f")
+
+[node name="Tuberia Costado derecha" type="MeshInstance3D" parent="." unique_id=1484676239]
+transform = Transform3D(0.08, 0, 0, 0, 1.5, 0, 0, 0, 0.08, 1.9225832, 1.5, -3)
+mesh = SubResource("CylinderMesh_rllsr")
+
+[node name="Tuberia Costado derecha 2" type="MeshInstance3D" parent="." unique_id=1974658112]
+transform = Transform3D(1.5285484e-16, 6.556708e-08, 0.08, 0.08, -6.556708e-08, 0, 3.496911e-09, 1.5, -3.496911e-09, 1.9225832, 2.5, -3.8)
+mesh = SubResource("CylinderMesh_d0q2f")
+
+[node name="Tuberia Costado derecha 3" type="MeshInstance3D" parent="." unique_id=1669386797]
+transform = Transform3D(1.5285484e-16, 6.556708e-08, 0.08, 0.08, -6.556708e-08, 0, 3.496911e-09, 1.5, -3.496911e-09, 1.9225832, 1.4313357, -3.8)
 mesh = SubResource("CylinderMesh_d0q2f")
 
 [node name="TerminalScreen" type="MeshInstance3D" parent="." unique_id=1915178122]
