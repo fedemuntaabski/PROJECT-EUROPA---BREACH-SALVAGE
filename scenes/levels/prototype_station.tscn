@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://8nuqarmnrsim"]
 
 [ext_resource type="Script" uid="uid://pmbubqm4qkn3" path="res://scripts/systems/player.gd" id="1_xeb7q"]
+[ext_resource type="PackedScene" path="res://scenes/interactables/Door.tscn" id="2_66hq0"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_mio37"]
 
@@ -97,3 +98,6 @@ mesh = SubResource("BoxMesh_66hq0")
 [node name="CollisionShape3D" type="CollisionShape3D" parent="Wall_South" unique_id=797959503]
 transform = Transform3D(20, 0, 0, 0, 4, 0, 0, 0, 1, 0, 0, 0)
 shape = SubResource("BoxShape3D_2suh3")
+
+[node name="Door" parent="." unique_id=381988540 instance=ExtResource("2_66hq0")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.4029241, 8.023413)
