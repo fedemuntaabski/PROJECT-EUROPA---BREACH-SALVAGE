@@ -28,6 +28,9 @@ var _current_room_id: StringName = START_ROOM_ID
 
 @onready var _player: Node2D = $Player
 
+const ACTIVE_ROOM_MODULATE := Color(1, 1, 1, 1)
+const INACTIVE_ROOM_MODULATE := Color(0.75, 0.75, 0.75, 0.45)
+
 
 func _ready() -> void:
 	_cache_rooms()
@@ -65,6 +68,11 @@ func _cache_rooms() -> void:
 
 func _set_current_room(room_id: StringName) -> void:
 	_current_room_id = room_id
+	for candidate_room_id: StringName in _rooms.keys():
+		var candidate_room: Node2D = _rooms[candidate_room_id]
+		if is_instance_valid(candidate_room):
+			candidate_room.modulate = ACTIVE_ROOM_MODULATE if candidate_room_id == room_id else INACTIVE_ROOM_MODULATE
+
 	var active_room: Node2D = _rooms[room_id]
 
 	if is_instance_valid(_player):
