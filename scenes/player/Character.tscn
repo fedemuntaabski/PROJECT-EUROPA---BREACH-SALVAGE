@@ -1,0 +1,64 @@
+[gd_scene format=3 uid="uid://dkc5iwo0ux7l5"]
+
+[ext_resource type="Script" uid="uid://cq06lyug325sw" path="res://scripts/player/player.gd" id="1_character_controller"]
+[ext_resource type="Script" uid="uid://87xo0prv26t4" path="res://scripts/player/components/health_component.gd" id="2_health_component"]
+[ext_resource type="Script" uid="uid://kkcli5cuxhvk" path="res://scripts/player/components/stats_component.gd" id="3_stats_component"]
+[ext_resource type="Script" uid="uid://lqdwpq5yq8ja" path="res://scripts/player/components/ability_component.gd" id="4_ability_component"]
+[ext_resource type="Script" uid="uid://cktj1jfkq4rmf" path="res://scripts/player/components/status_effect_component.gd" id="5_status_effect_component"]
+[ext_resource type="Script" uid="uid://farrbo7qom7n" path="res://scripts/player/components/inventory_component.gd" id="6_inventory_component"]
+[ext_resource type="Script" uid="uid://cvc5o82ag7141" path="res://scripts/player/character_animation_controller.gd" id="7_character_animation_controller"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_character_collision"]
+size = Vector2(18, 28)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_interaction"]
+size = Vector2(34, 34)
+
+[node name="Character" type="CharacterBody2D" unique_id=1834634980]
+script = ExtResource("1_character_controller")
+
+[node name="Visuals" type="Node2D" parent="." unique_id=724792103]
+
+[node name="Sprite2D" type="Sprite2D" parent="Visuals" unique_id=1605581247]
+position = Vector2(0, -8)
+
+[node name="Shadow" type="Sprite2D" parent="Visuals" unique_id=1919197107]
+modulate = Color(0, 0, 0, 0.35)
+position = Vector2(0, 8)
+scale = Vector2(1.2, 0.45)
+
+[node name="Effects" type="Node2D" parent="Visuals" unique_id=76440611]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=3986783]
+shape = SubResource("RectangleShape2D_character_collision")
+
+[node name="InteractionArea" type="Area2D" parent="." unique_id=733304278]
+monitorable = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="InteractionArea" unique_id=1464336503]
+shape = SubResource("RectangleShape2D_interaction")
+
+[node name="DirectionMarker" type="Marker2D" parent="." unique_id=2010799946]
+position = Vector2(0, -16)
+
+[node name="Audio" type="Node2D" parent="." unique_id=1712260776]
+
+[node name="Components" type="Node" parent="." unique_id=1728878469]
+
+[node name="HealthComponent" type="Node" parent="Components" unique_id=129328460]
+script = ExtResource("2_health_component")
+
+[node name="StatsComponent" type="Node" parent="Components" unique_id=1234229072]
+script = ExtResource("3_stats_component")
+
+[node name="AbilityComponent" type="Node" parent="Components" unique_id=1975763697]
+script = ExtResource("4_ability_component")
+
+[node name="StatusEffectComponent" type="Node" parent="Components" unique_id=1988718911]
+script = ExtResource("5_status_effect_component")
+
+[node name="InventoryComponent" type="Node" parent="Components" unique_id=556242735]
+script = ExtResource("6_inventory_component")
+
+[node name="AnimationController" type="Node" parent="." unique_id=1671516961]
+script = ExtResource("7_character_animation_controller")
