@@ -9,7 +9,7 @@ func _ready():
 
 func _on_start_button_pressed() -> void:
 	AudioManager.stop_menu_ambience()
-	SceneManager.change_scene("res://scenes/levels/Game.tscn")
+	SceneManager.change_scene("res://scenes/ui/SettingsMenu.tscn")
 	
 func _on_settings_button_pressed():
 	SceneManager.change_scene("res://scenes/ui/SettingsMenu.tscn")
