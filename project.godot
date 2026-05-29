@@ -25,11 +25,17 @@ SettingsManager="*res://scripts/managers/SettingsManager.gd"
 AudioManager="*res://scripts/managers/AudioManager.gd"
 SceneManager="*res://scripts/managers/SceneManager.gd"
 GameManager="*uid://c5joum4hltqep"
+SteamNetwork="*uid://cb2feajiq7qk5"
 
 [display]
 
 window/size/viewport_width=1920
 window/size/viewport_height=1080
+mouse_cursor/tooltip_position_offset=Vector2(0, 0)
+
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/godotsteam/plugin.cfg")
 
 [input]
 
@@ -147,5 +153,14 @@ interact={
 [rendering]
 
 rendering_device/driver.windows="d3d12"
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
 anti_aliasing/quality/msaa_3d=1
 anti_aliasing/quality/use_debanding=true
+
+[steam]
+
+initialization/app_id=0
+initialization/initialize_on_startup=false
+initialization/embed_callbacks=false
+multiplayer_peer/max_channels=4
