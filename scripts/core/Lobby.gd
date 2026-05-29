@@ -6,26 +6,55 @@ const ROLE_DEFINITIONS := [
 	{
 		"id": "electrical_engineer",
 		"label": "Ingeniero Electrónico",
+		"summary": "Administra energía, distribución y optimización de módulos.",
 	},
 	{
 		"id": "mechanic_welder",
 		"label": "Mecánico / Soldador",
+		"summary": "Ejecuta reparaciones, soldadura y contención de daños.",
 	},
 	{
 		"id": "security_officer",
 		"label": "Oficial de Seguridad",
+		"summary": "Protege al equipo, controla amenazas y asegura el perímetro.",
 	},
 	{
 		"id": "medic_scientist",
 		"label": "Médico / Científico",
+		"summary": "Sostiene la salud del equipo y apoya la investigación vital.",
 	},
 ]
 
+var ui_built: bool = false
 var player_list_vbox: VBoxContainer
-var role_selector: OptionButton
 var start_button: Button
+var _role_selector_node: OptionButton
+
+@onready var role_selector: OptionButton = _ensure_role_selector()
 
 func _ready() -> void:
+	_populate_roles()
+	_sync_initial_role_selection()
+	_update_start_button_state()
+
+	if not SteamNetwork.player_list_changed.is_connected(_update_player_list):
+		SteamNetwork.player_list_changed.connect(_update_player_list)
+	if not SteamNetwork.role_updated.is_connected(_on_remote_role_updated):
+		SteamNetwork.role_updated.connect(_on_remote_role_updated)
+
+	_update_player_list()
+
+func _ensure_role_selector() -> OptionButton:
+	if ui_built and is_instance_valid(_role_selector_node):
+		return _role_selector_node
+
+	_build_ui()
+	return _role_selector_node
+
+func _build_ui() -> void:
+	if ui_built:
+		return
+
 	anchor_right = 1.0
 	anchor_bottom = 1.0
 
@@ -60,27 +89,18 @@ func _ready() -> void:
 	role_label.text = "SELECT YOUR ROLE:"
 	main_vbox.add_child(role_label)
 
-	role_selector = OptionButton.new()
-	role_selector.item_selected.connect(_on_role_selected)
-	main_vbox.add_child(role_selector)
-	_populate_roles()
+	_role_selector_node = OptionButton.new()
+	_role_selector_node.name = "RoleSelector"
+	_role_selector_node.item_selected.connect(_on_role_selected)
+	main_vbox.add_child(_role_selector_node)
 
 	start_button = Button.new()
-	start_button.text = "INITIATE DESCENT"
-	start_button.visible = SteamNetwork.is_host
-	start_button.disabled = not SteamNetwork.is_host
+	start_button.name = "StartButton"
+	start_button.text = "Iniciar Descenso"
 	start_button.pressed.connect(_on_start_pressed)
 	main_vbox.add_child(start_button)
 
-	SteamNetwork.player_list_changed.connect(_update_player_list)
-	SteamNetwork.role_updated.connect(_on_remote_role_updated)
-
-	if role_selector.get_item_count() > 0:
-		role_selector.select(0)
-		if SteamNetwork.is_steam_running and SteamNetwork.lobby_id != 0:
-			_on_role_selected(0)
-
-	_update_player_list()
+	ui_built = true
 
 func _populate_roles() -> void:
 	role_selector.clear()
@@ -89,7 +109,26 @@ func _populate_roles() -> void:
 		role_selector.add_item(role_data["label"])
 		role_selector.set_item_metadata(role_selector.get_item_count() - 1, role_data)
 
+func _sync_initial_role_selection() -> void:
+	if role_selector.get_item_count() == 0:
+		return
+
+	role_selector.select(0)
+
+	if SteamNetwork.is_steam_running and SteamNetwork.lobby_id != 0:
+		_on_role_selected(0)
+
+func _update_start_button_state() -> void:
+	if not is_instance_valid(start_button):
+		return
+
+	start_button.visible = SteamNetwork.is_host
+	start_button.disabled = not SteamNetwork.is_host
+
 func _update_player_list() -> void:
+	if not is_instance_valid(player_list_vbox):
+		return
+
 	for child in player_list_vbox.get_children():
 		child.queue_free()
 
@@ -121,7 +160,11 @@ func _on_role_selected(index: int) -> void:
 	if not SteamNetwork.is_steam_running or SteamNetwork.lobby_id == 0:
 		return
 
-	Steam.setLobbyMemberData(SteamNetwork.lobby_id, ROLE_DATA_KEY, role_data["id"])
+	var role_id := String(role_data.get("id", ""))
+	if role_id.is_empty():
+		return
+
+	Steam.setLobbyMemberData(SteamNetwork.lobby_id, ROLE_DATA_KEY, role_id)
 	_update_player_list()
 
 func _on_remote_role_updated(_steam_id: int, _role_value: String) -> void:
@@ -129,6 +172,7 @@ func _on_remote_role_updated(_steam_id: int, _role_value: String) -> void:
 
 func _on_start_pressed() -> void:
 	if not SteamNetwork.is_host:
+		push_warning("Only the host can start the descent.")
 		return
 
 	if not SteamNetwork.is_steam_running:

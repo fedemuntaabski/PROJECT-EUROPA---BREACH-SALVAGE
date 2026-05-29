@@ -66,7 +66,7 @@ func _on_lobby_chat_update(_this_lobby_id: int, _changed_id: int, _making_change
 
 # Se dispara cuando alguien cambia su "Metadata" (como su Rol)
 func _on_lobby_data_update(_success: int, this_lobby_id: int, member_id: int, key: String) -> void:
-	if this_lobby_id != lobby_id:
+	if _success != 1 or this_lobby_id != lobby_id:
 		return
 
 	if key == ROLE_DATA_KEY:
@@ -75,7 +75,9 @@ func _on_lobby_data_update(_success: int, this_lobby_id: int, member_id: int, ke
 		return
 
 	if key == MATCH_STATE_KEY:
-		_handle_match_state_update()
+		var match_state := Steam.getLobbyData(lobby_id, MATCH_STATE_KEY)
+		if match_state == MATCH_STATE_DESCENDING:
+			_handle_match_state_update()
 
 func _sync_match_state_if_needed() -> void:
 	if lobby_id == 0:
@@ -88,5 +90,9 @@ func _handle_match_state_update() -> void:
 	if lobby_id == 0 or is_host:
 		return
 
+	if get_tree().current_scene != null and get_tree().current_scene.scene_file_path == DESCENT_SCENE_PATH:
+		return
+
 	if Steam.getLobbyData(lobby_id, MATCH_STATE_KEY) == MATCH_STATE_DESCENDING:
+		print("[SteamNetwork] lobby ", lobby_id, " match_state=descending; transitioning to Descenso.tscn")
 		SceneManager.change_scene(DESCENT_SCENE_PATH)
