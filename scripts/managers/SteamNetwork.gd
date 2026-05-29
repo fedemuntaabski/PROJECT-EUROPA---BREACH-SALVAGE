@@ -4,6 +4,11 @@ extends Node
 signal player_list_changed
 signal role_updated(steam_id, role_name)
 
+const ROLE_DATA_KEY := "role"
+const MATCH_STATE_KEY := "match_state"
+const MATCH_STATE_DESCENDING := "descending"
+const DESCENT_SCENE_PATH := "res://scenes/ui/Descenso.tscn"
+
 var is_steam_running: bool = false
 var lobby_id: int = 0
 var is_host: bool = false
@@ -19,13 +24,14 @@ func _initialize_steam() -> void:
 	var init_response: Dictionary = Steam.steamInitEx(false)
 	if init_response.has("status") and init_response["status"] == 0:
 		is_steam_running = true
-		# Conectar señales nativas de Steam a nuestras funciones
-		Steam.lobby_created.connect(_on_lobby_created)
-		Steam.lobby_joined.connect(_on_lobby_joined)
-		Steam.lobby_chat_update.connect(_on_lobby_chat_update)
-		Steam.lobby_data_update.connect(_on_lobby_data_update)
-		# Añade esta línea dentro de tu función _initialize_steam(), junto a las otras conexiones:
-		Steam.lobby_message.connect(_on_lobby_message)
+		if not Steam.lobby_created.is_connected(_on_lobby_created):
+			Steam.lobby_created.connect(_on_lobby_created)
+		if not Steam.lobby_joined.is_connected(_on_lobby_joined):
+			Steam.lobby_joined.connect(_on_lobby_joined)
+		if not Steam.lobby_chat_update.is_connected(_on_lobby_chat_update):
+			Steam.lobby_chat_update.connect(_on_lobby_chat_update)
+		if not Steam.lobby_data_update.is_connected(_on_lobby_data_update):
+			Steam.lobby_data_update.connect(_on_lobby_data_update)
 		print("¡Steam inicializado en el Manager Global!")
 
 	else:
@@ -52,6 +58,7 @@ func _on_lobby_joined(this_lobby_id: int, _permissions: int, _locked: bool, resp
 		is_host = (Steam.getLobbyOwner(lobby_id) == Steam.getSteamID()) # Si eres el dueño, te marca como host
 		print("Unido a la sala con éxito. ¿Es Host?: ", is_host)
 		player_list_changed.emit()
+		_sync_match_state_if_needed()
 
 # Se dispara cuando alguien entra, sale o es expulsado
 func _on_lobby_chat_update(_this_lobby_id: int, _changed_id: int, _making_change_id: int, _chat_state: int) -> void:
@@ -59,17 +66,27 @@ func _on_lobby_chat_update(_this_lobby_id: int, _changed_id: int, _making_change
 
 # Se dispara cuando alguien cambia su "Metadata" (como su Rol)
 func _on_lobby_data_update(_success: int, this_lobby_id: int, member_id: int, key: String) -> void:
-	# Verificamos que sea el lobby correcto y la clave correcta
-	if this_lobby_id == lobby_id and key == "role":
-		var new_role = Steam.getLobbyMemberData(lobby_id, member_id, "role")
-		role_updated.emit(member_id, new_role)
+	if this_lobby_id != lobby_id:
+		return
 
-# Se dispara en las PCs de TODOS los usuarios del lobby cuando alguien envía un mensaje
-func _on_lobby_message(this_lobby_id: int, user_id: int, text: String, type: int) -> void:
-	# Verificamos que sea un mensaje de texto normal (tipo 1) y que coincida con nuestro comando
-	if type == 1 and text == "START_DESCENT":
-		var sender_name = Steam.getFriendPersonaName(user_id)
-		print("Comando de descenso recibido desde Steam. Remitente: ", sender_name)
-		
-		# Sincronización absoluta: Todos cargan la escena de inserción en el mismo instante
-		SceneManager.change_scene("res://scenes/ui/Descenso.tscn")
+	if key == ROLE_DATA_KEY:
+		var new_role := Steam.getLobbyMemberData(lobby_id, member_id, ROLE_DATA_KEY)
+		role_updated.emit(member_id, new_role)
+		return
+
+	if key == MATCH_STATE_KEY:
+		_handle_match_state_update()
+
+func _sync_match_state_if_needed() -> void:
+	if lobby_id == 0:
+		return
+
+	if Steam.getLobbyData(lobby_id, MATCH_STATE_KEY) == MATCH_STATE_DESCENDING:
+		_handle_match_state_update()
+
+func _handle_match_state_update() -> void:
+	if lobby_id == 0 or is_host:
+		return
+
+	if Steam.getLobbyData(lobby_id, MATCH_STATE_KEY) == MATCH_STATE_DESCENDING:
+		SceneManager.change_scene(DESCENT_SCENE_PATH)
