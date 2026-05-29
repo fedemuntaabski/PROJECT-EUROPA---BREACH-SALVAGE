@@ -1,0 +1,142 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/lobby/role_card.gd" id="1_script"]
+[ext_resource type="FontFile" path="res://assets/fonts/Exo2-Light.ttf" id="2_font"]
+
+[sub_resource type="Theme" id="1_theme"]
+default_font = ExtResource("2_font")
+default_font_size = 18
+
+[node name="RoleCard" type="PanelContainer"]
+custom_minimum_size = Vector2(280, 410)
+theme = SubResource("1_theme")
+script = ExtResource("1_script")
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="CardVBox" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="HeaderRow" type="HBoxContainer" parent="MarginContainer/CardVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="AccentBar" type="ColorRect" parent="MarginContainer/CardVBox/HeaderRow"]
+custom_minimum_size = Vector2(10, 54)
+layout_mode = 2
+color = Color(0.2, 0.7, 0.9, 1)
+
+[node name="TextStack" type="VBoxContainer" parent="MarginContainer/CardVBox/HeaderRow"]
+layout_mode = 2
+theme_override_constants/separation = 2
+
+[node name="NameLabel" type="Label" parent="MarginContainer/CardVBox/HeaderRow/TextStack"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "ROLE"
+
+[node name="StateLabel" type="Label" parent="MarginContainer/CardVBox/HeaderRow/TextStack"]
+layout_mode = 2
+modulate = Color(0.86, 0.94, 1, 1)
+text = "AVAILABLE"
+
+[node name="PortraitPanel" type="PanelContainer" parent="MarginContainer/CardVBox"]
+custom_minimum_size = Vector2(0, 120)
+layout_mode = 2
+
+[node name="PortraitTexture" type="TextureRect" parent="MarginContainer/CardVBox/PortraitPanel"]
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+visible = false
+
+[node name="PortraitPlaceholder" type="Label" parent="MarginContainer/CardVBox/PortraitPanel"]
+layout_mode = 2
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 28
+text = "ROLE"
+
+[node name="DescriptionLabel" type="Label" parent="MarginContainer/CardVBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Role description"
+
+[node name="StatsVBox" type="VBoxContainer" parent="MarginContainer/CardVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="HPRow" type="HBoxContainer" parent="MarginContainer/CardVBox/StatsVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="HPLabel" type="Label" parent="MarginContainer/CardVBox/StatsVBox/HPRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(72, 0)
+text = "HP"
+
+[node name="HPBar" type="ProgressBar" parent="MarginContainer/CardVBox/StatsVBox/HPRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+show_percentage = false
+max_value = 10.0
+
+[node name="CombatRow" type="HBoxContainer" parent="MarginContainer/CardVBox/StatsVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CombatLabel" type="Label" parent="MarginContainer/CardVBox/StatsVBox/CombatRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(72, 0)
+text = "COMBAT"
+
+[node name="CombatBar" type="ProgressBar" parent="MarginContainer/CardVBox/StatsVBox/CombatRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+show_percentage = false
+max_value = 10.0
+
+[node name="RepairRow" type="HBoxContainer" parent="MarginContainer/CardVBox/StatsVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="RepairLabel" type="Label" parent="MarginContainer/CardVBox/StatsVBox/RepairRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(72, 0)
+text = "REPAIR"
+
+[node name="RepairBar" type="ProgressBar" parent="MarginContainer/CardVBox/StatsVBox/RepairRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+show_percentage = false
+max_value = 10.0
+
+[node name="UtilityRow" type="HBoxContainer" parent="MarginContainer/CardVBox/StatsVBox"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="UtilityLabel" type="Label" parent="MarginContainer/CardVBox/StatsVBox/UtilityRow"]
+layout_mode = 2
+custom_minimum_size = Vector2(72, 0)
+text = "UTILITY"
+
+[node name="UtilityBar" type="ProgressBar" parent="MarginContainer/CardVBox/StatsVBox/UtilityRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+show_percentage = false
+max_value = 10.0
+
+[node name="TraitsLabel" type="Label" parent="MarginContainer/CardVBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "PASSIVES"
+
+[node name="SelectButton" type="Button" parent="MarginContainer/CardVBox"]
+layout_mode = 2
+text = "SELECT"

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/characters/character_class_res.gd" id="1_class"]
+
+[sub_resource type="CharacterStatsResource" id="1_stats"]
+hp = 6
+combat = 4
+repair = 5
+utility = 10
+
+[resource]
+script = ExtResource("1_class")
+role_id = "medic_scientist"
+display_name = "Médico / Científico"
+description = "Estabiliza a la tripulación y traduce anomalías biológicas en ventaja táctica."
+starting_stats = SubResource("1_stats")
+accent_color = Color(0.55, 0.88, 0.62, 1)
+passive_traits = PackedStringArray("Crew Stabilization", "Specimen Analysis", "Field Triage")
+upgrade_hooks = PackedStringArray("bio_adaptation", "medical_protocols")

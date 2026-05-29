@@ -89,6 +89,6 @@ func _open_capsule_doors() -> void:
 		return
 
 	var generated_seed := randi()
-	Steam.setLobbyData(SteamNetwork.lobby_id, "world_seed", str(generated_seed))
+	SteamNetwork.publish_world_seed(generated_seed)
 	SceneManager.change_scene(GAMEPLAY_SCENE_PATH)
 	# Aquí es donde la UI se desvanece y le da paso al entorno 2D/3D jugable

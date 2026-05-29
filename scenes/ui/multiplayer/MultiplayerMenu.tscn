@@ -1,0 +1,124 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/multiplayer/multiplayer_menu.gd" id="1_script"]
+[ext_resource type="PackedScene" path="res://scenes/ui/MainMenuBackground.tscn" id="2_background"]
+[ext_resource type="FontFile" path="res://assets/fonts/Exo2-Light.ttf" id="3_font"]
+
+[sub_resource type="Theme" id="1_theme"]
+default_font = ExtResource("3_font")
+default_font_size = 18
+
+[node name="MultiplayerMenu" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("1_theme")
+script = ExtResource("1_script")
+
+[node name="BackgroundContainer" type="SubViewportContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="SubViewport" type="SubViewport" parent="BackgroundContainer"]
+handle_input_locally = false
+size = Vector2i(1920, 1080)
+render_target_update_mode = 4
+
+[node name="MainMenuBackground" parent="BackgroundContainer/SubViewport" instance=ExtResource("2_background")]
+
+[node name="Overlay" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.02, 0.04, 0.05, 0.58)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 22
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 22
+
+[node name="MainVBox" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 18
+
+[node name="TitleLabel" type="Label" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 34
+text = "MULTIPLAYER TERMINAL"
+
+[node name="SubtitleLabel" type="Label" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+modulate = Color(0.75, 0.86, 0.9, 1)
+text = "CREATE EXPEDITION / JOIN EXPEDITION / STEEL SEA CONTROL"
+
+[node name="ActionRow" type="HBoxContainer" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="CreateButton" type="Button" parent="MarginContainer/MainVBox/ActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "CREATE EXPEDITION"
+
+[node name="JoinButton" type="Button" parent="MarginContainer/MainVBox/ActionRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "JOIN EXPEDITION"
+
+[node name="BackButton" type="Button" parent="MarginContainer/MainVBox/ActionRow"]
+layout_mode = 2
+text = "BACK"
+
+[node name="BrowserPanel" type="PanelContainer" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BrowserVBox" type="VBoxContainer" parent="MarginContainer/MainVBox/BrowserPanel"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="BrowserHeader" type="HBoxContainer" parent="MarginContainer/MainVBox/BrowserPanel/BrowserVBox"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="BrowserStatusLabel" type="Label" parent="MarginContainer/MainVBox/BrowserPanel/BrowserVBox/BrowserHeader"]
+layout_mode = 2
+size_flags_horizontal = 3
+text = "SCAN THE EXPEDITION FREQUENCIES"
+
+[node name="RefreshButton" type="Button" parent="MarginContainer/MainVBox/BrowserPanel/BrowserVBox/BrowserHeader"]
+layout_mode = 2
+text = "REFRESH"
+
+[node name="CloseButton" type="Button" parent="MarginContainer/MainVBox/BrowserPanel/BrowserVBox/BrowserHeader"]
+layout_mode = 2
+text = "CLOSE"
+
+[node name="BrowserScroll" type="ScrollContainer" parent="MarginContainer/MainVBox/BrowserPanel/BrowserVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="BrowserListVBox" type="VBoxContainer" parent="MarginContainer/MainVBox/BrowserPanel/BrowserVBox/BrowserScroll"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="BuildLabel" type="Label" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+modulate = Color(0.7, 0.8, 0.84, 1)
+text = "BUILD 0.1.0"

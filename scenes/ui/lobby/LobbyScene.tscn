@@ -1,0 +1,146 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ui/lobby/lobby_scene.gd" id="1_script"]
+[ext_resource type="FontFile" path="res://assets/fonts/Exo2-Light.ttf" id="2_font"]
+
+[sub_resource type="Theme" id="1_theme"]
+default_font = ExtResource("2_font")
+default_font_size = 18
+
+[node name="LobbyScene" type="Control"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("1_theme")
+script = ExtResource("1_script")
+
+[node name="Background" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.035, 0.047, 0.058, 1)
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 18
+
+[node name="MainVBox" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="HeaderContainer" type="HBoxContainer" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TitleStack" type="VBoxContainer" parent="MarginContainer/MainVBox/HeaderContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+
+[node name="TitleLabel" type="Label" parent="MarginContainer/MainVBox/HeaderContainer/TitleStack"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "EXPEDITION LOBBY"
+
+[node name="SubtitleLabel" type="Label" parent="MarginContainer/MainVBox/HeaderContainer/TitleStack"]
+layout_mode = 2
+modulate = Color(0.75, 0.83, 0.9, 1)
+text = "SPECIALIST ASSIGNMENT / READY CHECK"
+
+[node name="VersionLabel" type="Label" parent="MarginContainer/MainVBox/HeaderContainer"]
+layout_mode = 2
+text = "BUILD 0.1.0"
+
+[node name="LobbyInfoPanel" type="PanelContainer" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+
+[node name="LobbyInfoLabel" type="Label" parent="MarginContainer/MainVBox/LobbyInfoPanel"]
+layout_mode = 2
+autowrap_mode = 3
+text = "Lobby information"
+
+[node name="ContentContainer" type="HBoxContainer" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="PlayerListPanel" type="PanelContainer" parent="MarginContainer/MainVBox/ContentContainer"]
+layout_mode = 2
+size_flags_horizontal = 1
+size_flags_vertical = 3
+
+[node name="PlayerListVBox" type="VBoxContainer" parent="MarginContainer/MainVBox/ContentContainer/PlayerListPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="RoleSelectionPanel" type="PanelContainer" parent="MarginContainer/MainVBox/ContentContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/MainVBox/ContentContainer/RoleSelectionPanel"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="RoleCardsGrid" type="GridContainer" parent="MarginContainer/MainVBox/ContentContainer/RoleSelectionPanel/ScrollContainer"]
+layout_mode = 2
+columns = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 12
+
+[node name="StatusColumn" type="VBoxContainer" parent="MarginContainer/MainVBox/ContentContainer"]
+layout_mode = 2
+size_flags_horizontal = 1
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="ReadyPanel" type="PanelContainer" parent="MarginContainer/MainVBox/ContentContainer/StatusColumn"]
+layout_mode = 2
+
+[node name="ReadyVBox" type="VBoxContainer" parent="MarginContainer/MainVBox/ContentContainer/StatusColumn/ReadyPanel"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="ReadyStatusLabel" type="Label" parent="MarginContainer/MainVBox/ContentContainer/StatusColumn/ReadyPanel/ReadyVBox"]
+layout_mode = 2
+autowrap_mode = 3
+text = "STATUS: NOT READY"
+
+[node name="ReadyButton" type="Button" parent="MarginContainer/MainVBox/ContentContainer/StatusColumn/ReadyPanel/ReadyVBox"]
+layout_mode = 2
+text = "READY UP"
+
+[node name="ChatPanel" type="PanelContainer" parent="MarginContainer/MainVBox/ContentContainer/StatusColumn"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="ChatPlaceholderLabel" type="Label" parent="MarginContainer/MainVBox/ContentContainer/StatusColumn/ChatPanel"]
+layout_mode = 2
+autowrap_mode = 3
+text = "COMMS CHANNEL PLACEHOLDER"
+
+[node name="FooterContainer" type="HBoxContainer" parent="MarginContainer/MainVBox"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BackButton" type="Button" parent="MarginContainer/MainVBox/FooterContainer"]
+layout_mode = 2
+text = "BACK"
+
+[node name="LaunchButton" type="Button" parent="MarginContainer/MainVBox/FooterContainer"]
+layout_mode = 2
+text = "LAUNCH DESCENT"

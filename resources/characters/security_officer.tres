@@ -1,0 +1,19 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/characters/character_class_res.gd" id="1_class"]
+
+[sub_resource type="CharacterStatsResource" id="1_stats"]
+hp = 9
+combat = 10
+repair = 3
+utility = 5
+
+[resource]
+script = ExtResource("1_class")
+role_id = "security_officer"
+display_name = "Oficial de Seguridad"
+description = "Contiene amenazas, cubre rutas de extracción y mantiene la disciplina operativa."
+starting_stats = SubResource("1_stats")
+accent_color = Color(0.86, 0.25, 0.28, 1)
+passive_traits = PackedStringArray("Threat Suppression", "Perimeter Lockdown", "Armored Response")
+upgrade_hooks = PackedStringArray("ballistic_training", "reactive_armor")

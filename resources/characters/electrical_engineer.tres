@@ -1,0 +1,19 @@
+[gd_resource type="Resource" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/data/characters/character_class_res.gd" id="1_class"]
+
+[sub_resource type="CharacterStatsResource" id="1_stats"]
+hp = 7
+combat = 3
+repair = 9
+utility = 8
+
+[resource]
+script = ExtResource("1_class")
+role_id = "electrical_engineer"
+display_name = "Ingeniero Electrónico"
+description = "Arma, redistribuye y estabiliza energía crítica para mantener la nave operativa."
+starting_stats = SubResource("1_stats")
+accent_color = Color(0.32, 0.82, 0.92, 1)
+passive_traits = PackedStringArray("Network Sync", "Power Routing", "Signal Diagnostics")
+upgrade_hooks = PackedStringArray("energy_distributor", "systems_optimization")

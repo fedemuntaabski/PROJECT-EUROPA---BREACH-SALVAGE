@@ -29,6 +29,8 @@ func _ready() -> void:
 		randomize()
 
 	_spawn_crew()
+	if SteamNetwork.is_host:
+		SteamNetwork.mark_in_game()
 
 
 func _spawn_crew() -> void:
@@ -43,9 +45,9 @@ func _spawn_crew() -> void:
 	for child in crew_root.get_children():
 		child.queue_free()
 
-	var members_count := Steam.getNumLobbyMembers(SteamNetwork.lobby_id)
-	for index in range(members_count):
-		var steam_id := Steam.getLobbyMemberByIndex(SteamNetwork.lobby_id, index)
+	var member_ids := SteamNetwork.get_sorted_lobby_member_ids()
+	for index in range(member_ids.size()):
+		var steam_id := member_ids[index]
 		if steam_id <= 0:
 			continue
 
