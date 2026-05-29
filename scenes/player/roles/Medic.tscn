@@ -1,0 +1,5 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/player/Character.tscn" id="1_character"]
+
+[node name="Medic" instance=ExtResource("1_character")]

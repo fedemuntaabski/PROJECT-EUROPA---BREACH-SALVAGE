@@ -8,6 +8,7 @@ const ROLE_DATA_KEY := "role"
 const MATCH_STATE_KEY := "match_state"
 const MATCH_STATE_DESCENDING := "descending"
 const DESCENT_SCENE_PATH := "res://scenes/ui/Descenso.tscn"
+const GAMEPLAY_SCENE_PATH := "res://scenes/gameplay/MainGameplay.tscn"
 
 var is_steam_running: bool = false
 var lobby_id: int = 0
@@ -75,24 +76,54 @@ func _on_lobby_data_update(_success: int, this_lobby_id: int, member_id: int, ke
 		return
 
 	if key == MATCH_STATE_KEY:
-		var match_state := Steam.getLobbyData(lobby_id, MATCH_STATE_KEY)
-		if match_state == MATCH_STATE_DESCENDING:
-			_handle_match_state_update()
+		_sync_match_state_if_needed()
+		return
+
+	if key == "world_seed":
+		_handle_world_seed_update()
 
 func _sync_match_state_if_needed() -> void:
 	if lobby_id == 0:
+		return
+
+	if get_cached_world_seed() >= 0:
+		_handle_world_seed_update()
 		return
 
 	if Steam.getLobbyData(lobby_id, MATCH_STATE_KEY) == MATCH_STATE_DESCENDING:
 		_handle_match_state_update()
 
 func _handle_match_state_update() -> void:
-	if lobby_id == 0 or is_host:
-		return
-
-	if get_tree().current_scene != null and get_tree().current_scene.scene_file_path == DESCENT_SCENE_PATH:
+	if get_tree().current_scene != null and get_tree().current_scene.scene_file_path == GAMEPLAY_SCENE_PATH:
 		return
 
 	if Steam.getLobbyData(lobby_id, MATCH_STATE_KEY) == MATCH_STATE_DESCENDING:
 		print("[SteamNetwork] lobby ", lobby_id, " match_state=descending; transitioning to Descenso.tscn")
 		SceneManager.change_scene(DESCENT_SCENE_PATH)
+
+func _handle_world_seed_update() -> void:
+	if lobby_id == 0 or is_host:
+		return
+
+	if get_tree().current_scene != null and get_tree().current_scene.scene_file_path == GAMEPLAY_SCENE_PATH:
+		return
+
+	if get_cached_world_seed() >= 0:
+		print("[SteamNetwork] lobby ", lobby_id, " world_seed detected; transitioning to MainGameplay.tscn")
+		SceneManager.change_scene(GAMEPLAY_SCENE_PATH)
+
+func get_cached_world_seed() -> int:
+	if lobby_id == 0:
+		return -1
+
+	var raw_world_seed := String(Steam.getLobbyData(lobby_id, "world_seed"))
+	if raw_world_seed.is_empty():
+		return -1
+
+	return int(raw_world_seed)
+
+func get_player_role_for_peer(steam_id: int) -> String:
+	if lobby_id == 0 or steam_id <= 0:
+		return ""
+
+	return String(Steam.getLobbyMemberData(lobby_id, steam_id, ROLE_DATA_KEY))
