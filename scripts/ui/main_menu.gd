@@ -8,8 +8,9 @@ func _ready():
 	animation_player.play("intro")
 
 func _on_start_button_pressed() -> void:
-	AudioManager.stop_menu_ambience()
-	SceneManager.change_scene("res://scenes/ui/SettingsMenu.tscn")
+	print("Iniciando Operación: Solicitando creación de lobby en Steam...")
+	# Llamamos al manager global que maneja la red de Steam
+	SteamNetwork.create_mission_lobby()
 	
 func _on_settings_button_pressed():
 	SceneManager.change_scene("res://scenes/ui/SettingsMenu.tscn")
