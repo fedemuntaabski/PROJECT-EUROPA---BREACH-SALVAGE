@@ -24,7 +24,10 @@ func _initialize_steam() -> void:
 		Steam.lobby_joined.connect(_on_lobby_joined)
 		Steam.lobby_chat_update.connect(_on_lobby_chat_update)
 		Steam.lobby_data_update.connect(_on_lobby_data_update)
+		# Añade esta línea dentro de tu función _initialize_steam(), junto a las otras conexiones:
+		Steam.lobby_message.connect(_on_lobby_message)
 		print("¡Steam inicializado en el Manager Global!")
+
 	else:
 		# Corregido de forma segura usando la clave 'verbal' que expuso tu debug
 		print("Error Steam: ", init_response.get("verbal", "Error desconocido"))
@@ -60,3 +63,13 @@ func _on_lobby_data_update(_success: int, this_lobby_id: int, member_id: int, ke
 	if this_lobby_id == lobby_id and key == "role":
 		var new_role = Steam.getLobbyMemberData(lobby_id, member_id, "role")
 		role_updated.emit(member_id, new_role)
+
+# Se dispara en las PCs de TODOS los usuarios del lobby cuando alguien envía un mensaje
+func _on_lobby_message(this_lobby_id: int, user_id: int, text: String, type: int) -> void:
+	# Verificamos que sea un mensaje de texto normal (tipo 1) y que coincida con nuestro comando
+	if type == 1 and text == "START_DESCENT":
+		var sender_name = Steam.getFriendPersonaName(user_id)
+		print("Comando de descenso recibido desde Steam. Remitente: ", sender_name)
+		
+		# Sincronización absoluta: Todos cargan la escena de inserción en el mismo instante
+		SceneManager.change_scene("res://scenes/ui/Descenso.tscn")

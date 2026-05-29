@@ -119,4 +119,10 @@ func _on_remote_role_updated(_steam_id, _role_name):
 	_update_player_list()
 
 func _on_start_pressed():
-	print("Iniciando secuencia de descenso...")
+	print("Host inició la operación. Enviando señal de descenso a la tripulación...")
+	
+	if SteamNetwork.is_steam_running and SteamNetwork.lobby_id != 0:
+		# Enviamos un mensaje de chat al lobby. 
+		# Aunque dice "Chat", sirve para enviar strings de comandos por red a todos.
+		var command = "START_DESCENT"
+		Steam.sendLobbyChatMsg(SteamNetwork.lobby_id, command)
